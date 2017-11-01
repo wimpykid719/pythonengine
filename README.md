@@ -19,7 +19,7 @@
 1. Clone repository
 
     ```
-    $ git clone git@github.com:mejiro/SearchEngine.git
+    $ git clone git@github.com:wimpykid719/pythonengine.git
     ```
     
 2. Install python packages
