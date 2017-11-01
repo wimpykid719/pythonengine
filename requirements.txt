@@ -1,0 +1,5 @@
+flask
+janome
+pymongo
+requests
+beautifulsoup4
