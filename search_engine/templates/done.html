@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="wallpaperw">
+{% if crawled %}
+    <div class="done-wallpaper">
+    <div class="done">
+        <h3 class="terminal">「{{url}}」のURL解析結果...</h3>
+        <ul class="crawed-url">
+            {% for url in crawled %}
+            <li><a href="{{url}}">{{url}}</a></li>
+            {% else %}
+            <p>そのページにURLはありませんでした。</p>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>URLを入れてクロールボタンを押して下さい。</p>
+        {% endif %}
+    </div> <!-- done -->
+    </div> <!-- done-wallpaper -->
+    <div class="button"><a href="{{url_for('index')}}">Top</a></div>
+</div><!-- wallpaperw -->
+{% endblock %}

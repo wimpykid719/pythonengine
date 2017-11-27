@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="wallpapery">
+        <div class="container-wallr">
+        <div class="container2">
+            <form method="post" action="{{url_for('index')}}">
+                <div class="search-bar">
+                    <input type="text" class="search-btn" name="keyword" placeholder="キーワードを入力して下さい。">
+                    <button type="submit" class="submit-btn" value="search">
+                        <svg class="icon icon-search">
+                            <use xlink:href="#search" />
+                        </svg>
+                    </button>
+                    
+                </div>
+            </form>
+        </div> <!-- container2 -->
+        </div> <!-- container-wallr -->
+
+        {% if keyword %}
+        <div class="result-wallpaper">
+        <div class="result">
+            <h3 class="normal">「{{keyword}}」の検索結果...</h3>
+            <ul class="pickup-url">
+                {% for url in query['url'] %}
+                <li><a href="{{url}}">{{url}}</a></li>
+                {% else %}
+                <p>そのキーワードを持つページはありませんでした。</p>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>キーワードを入れて検索ボタンを押して下さい。</p>
+            {% endif %}
+        </div> <!-- result -->
+        </div> <!-- result-wallpaper -->
+        <div class="button"><a href="{{url_for('index')}}">Top</a></div>
+    </div><!-- wallpapery -->
+{% endblock %}

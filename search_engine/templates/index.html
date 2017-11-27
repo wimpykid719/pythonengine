@@ -1,43 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head lang="ja">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <title>Pythonで作る検索エンジン</title>
-</head>
-<body>
+{% extends "layout.html" %}
+{% block content %}
+    <input type="checkbox" id="menu-toggle"/>
+    <label id="trigger" for="menu-toggle"></label>
+    <label id="burger" for="menu-toggle"></label>
+    <ul id="menu">
+        <p id="howto">使い方</p>
+        <p>この検索エンジンはPythonで書かれています。<br>キーワードを検索ボックスに入力しEnterまたは検索ボタンをクリックするとDBからキーワードとマッチしたURLを探して来て表示してくれます。</p>
+        <!-- <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Portfolio</a></li>
+        <li><a href="#">Contact</a></li> -->
+    </ul>
+    <div class="wallpaper">
+    <div class="container-wall">
+        <div class="container">
+            <img src="/static/img/rush.png" width="auto" height="auto" alt="rush" title="rush">
 
-    <div class="container">
-        <h1>Python検索エンジン</h1>
-
-        <form method="post" action="{{url_for('index')}}">
-            <div class="row">
-                <div class="col-xs-10">
-                    <input type="text" class="form-control" name="keyword" placeholder="キーワードを入力して下さい.">
+            <form method="post" action="{{url_for('index')}}"><!-- ここでもう一度サーバーにアクセスしている -->
+                <div class="search-bar">
+                    <input type="text" class="search-btn" name="keyword" placeholder="キーワードを入力して下さい.">
+                    <button type="submit" class="submit-btn" value="search">
+                        <svg class="icon icon-search">
+                            <use xlink:href="#search" />
+                        </svg>
+                    </button>
+                    
                 </div>
-                <div class="col-xs-2">
-                    <input type="submit" class="btn btn-md btn-block btn-primary" value="検索">
-                </div>
-            </div>
-        </form>
-
-        <br>
-
-        {% if keyword %}
-        <h3>「{{keyword}}」の検索結果...</h3>
-        <ul>
-            {% for url in query['url'] %}
-            <li><a href="{{url}}">{{url}}</a></li>
-            {% else %}
-            <p>そのキーワードを持つページはありませんでした．</p>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p>キーワードを入れて検索ボタンを押して下さい.</p>
-        {% endif %}
-    </div><!-- container -->
-    <script src="//code.jquery.com/jquery.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-</body>
-</html>
+            </form>
+            <br>   
+        </div><!-- container -->
+        </div>
+        <div class="gif">
+            <img src="/static/img/coffee.gif" width="auto" height="auto" alt="coffee" >
+        </div>
+    </div>
+{% endblock %}

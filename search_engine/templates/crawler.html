@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div class="loadpage">
+        <div class="loading">
+            <div class="loader">Loading...</div>
+            <p>I'm f**king working for you, Sir.</p>
+        </div>
+    </div>
+
+    <input type="checkbox" id="menu-toggle"/>
+    <label id="trigger" for="menu-toggle"></label>
+    <label id="burger" for="menu-toggle"></label>
+    <ul id="menu">
+        <p id="howto">使い方</p>
+        <p>この検索エンジンはPythonで書かれています。キーワードを検索ボックスに入力しEnterまたは検索ボタンをクリックするとDBからキーワードとマッチしたURLを探して来て表示してくれます。</p>
+        
+    </ul>
+    
+    <div class="wallpaperb">
+    <div class="container-wall">
+        <div class="container">
+            <img src="/static/img/rush.png" width="auto" height="auto" alt="rush" title="rush" >
+
+            <form method="post" action="{{url_for('crawler')}}"><!-- ここでもう一度サーバーにアクセスしている -->
+                <div class="search-bar">
+                    <input type="text" class="search-btn2" name="url" placeholder="https://yoursite.com">
+                    <button type="submit" class="submit-btn" value="crawl" onclick="loadpage();">
+                        <svg class="icon icon-spider">
+                            <use xlink:href="#spider" />
+                        </svg>
+                    </button>
+                    
+                </div>
+            </form>
+
+            <br>
+
+            
+        </div><!-- container -->
+        </div><!-- container-wall -->
+        <div class="gif">
+            <img src="/static/img/fire.gif" width="auto" height="auto" alt="fire" >
+        </div>
+    </div><!-- wallpaperb -->
+    
+    
+{% endblock %}

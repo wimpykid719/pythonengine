@@ -52,23 +52,29 @@ def _get_page(url):
         return r.text
 
 
-def _extract_url_links(html):
+def _extract_url_links(html, rooturl):
     """extract url links
     >>> _extract_url_links('aa<a href="link1">link1</a>bb<a href="link2">link2</a>cc')
     ['link1', 'link2']
     """
     #"html.parser"はなるべくpython標準のparserモジュールを使うように指定しているBeautifulSoup()で
     #BeautifulSoupで扱えるようにしている。
+    root_url = rooturl
+    img_suffixes = (".png", ".jpg", ".gif")
     all_url = []
     body_soup = BeautifulSoup(html, "html.parser").find('body')
     #aタグを全て持ってくる。
-    
     #print(soup.find_all(href=re.compile("link")))からの[]が帰ってきた。
     #
     for child_tag in body_soup.findChildren():
-    	if child_tag.get('href') is not None:
+        if child_tag.get('href') is not None:
             if '#' not in child_tag.get('href'):
-                all_url.append(child_tag.get('href'))
+                url_parts = urlparse(child_tag.get('href'))#url_parts.fragmentはurl#以降があったらそれは同じページ内移動になるので追加しないそして
+                if not url_parts.fragment and not url_parts.path.endswith(img_suffixes):#pathの最後から検索してpngとかがあったら除外する。
+                    if url_parts.scheme:
+                        all_url.append(child_tag.get('href'))
+                    else:
+                        all_url.append(root_url + child_tag.get('href'))
     return all_url
 
 
@@ -114,10 +120,11 @@ def crawl_web(seed, max_depth):
         if page_url not in crawled:
             html = _get_page(page_url) #2回目はここでエラーになると思う。
             add_page_to_index(page_url, html)
-            to_crawl = to_crawl.union(_extract_url_links(html)) #to_crawlに今まで入ってたurlとbf4で持ってきたurlを足してto_crawlに戻す最初0 + 5、4 + 2、5 + 0
+            to_crawl = to_crawl.union(_extract_url_links(html, page_url)) #to_crawlに今まで入ってたurlとbf4で持ってきたurlを足してto_crawlに戻す最初0 + 5、4 + 2、5 + 0
             #ここでaタグからurlだけ取り出す。to_crawlには<a>のついたurlのリストが入ってくる
-            print(to_crawl) #to_crawlは空だったset()
+            # print(to_crawl) #to_crawlは空だったset()
             crawled.append(page_url)
         if not to_crawl:
             to_crawl, next_depth = next_depth, [] #next_depthいる？
         depth += 1
+    return to_crawl

@@ -12,7 +12,7 @@ if __name__ == '__main__':
     if args.action == 'crawler':
         #コマンドラインでcrawlerって打ち込まれたらweb_crawlerって言うフォルダからcrawler.pyを読み込んでcrawl_webっていうdefを持ってくる    
         from web_crawler.crawler import crawl_web
-        crawl_web('http://ltomu.minibird.jp/', 2)
+        crawl_web('https://www.aasa.ac.jp/', 2)
     elif args.action == 'webpage':
         from search_engine import app
         app.run(debug=True, host='0.0.0.0', port=9000)

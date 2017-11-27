@@ -1,6 +1,7 @@
 from urllib.parse import urlparse
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from pymongo import MongoClient
+from web_crawler.crawler import crawl_web
 
 app = Flask(__name__)
 app.config.from_object('config') #flaskのconfigを読み込んでる
@@ -19,11 +20,29 @@ def index():
     if request.method == 'POST':
         keyword = request.form['keyword'] #フォームで入力された文字がkeyword変数に入っているのでそれを持ってくるそこからkeywordに代入
         if keyword:
+            if keyword == 'wataru':
+                return redirect(url_for('crawler'))
             return render_template(
-                'index.html',
+                'result.html',
                 query=col.find_one({'keyword': keyword}),
                 keyword=keyword)
     return render_template('index.html')
+
+@app.route('/crawler', methods=['GET', 'POST'])
+def crawler():
+    """seacretpage
+    """
+    crawled = []
+    if request.method == 'POST':
+        url = request.form['url'] #フォームで入力された文字がkeyword変数に入っているのでそれを持ってくるそこからkeywordに代入
+        if 'http' in url:
+                crawled = crawl_web(url, 0)
+                return render_template(
+                    'done.html',
+                    crawled=crawled,
+                    url=url)
+                
+    return render_template('crawler.html')
 
 #DBにこんな感じでデータが入ってる。pythonでいう辞書型
 # { "_id" : ObjectId("59c76e3495babe084f1e23eb"), "keyword" : "Home", "url" : [  "http://docs.sphinx-users.jp/contents.html" ] }
