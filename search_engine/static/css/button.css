@@ -12,6 +12,7 @@
   top: 50%;
   left: 40%;
   z-index: 1;
+  border-radius: 30px;
 }
 .button::before,
 .button::after {
@@ -51,5 +52,13 @@
 .button:hover::after {
   top: 0;
   background-color: #333;
+}
+
+.colorw > a {
+  color: #fff;
+}
+
+.colorw {
+  border: 2px solid #fff;
 }
 

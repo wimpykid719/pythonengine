@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="wallpaperw">
+<body id="wallpaperimg">
+
 {% if crawled %}
     <div class="done-wallpaper">
     <div class="done">
@@ -17,6 +18,6 @@
         {% endif %}
     </div> <!-- done -->
     </div> <!-- done-wallpaper -->
-    <div class="button"><a href="{{url_for('index')}}">Top</a></div>
-</div><!-- wallpaperw -->
+    <div class="button colorw"><a href="{{url_for('index')}}">Top</a></div>
+
 {% endblock %}

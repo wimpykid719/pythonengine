@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+<body id="wallpaperb">
     <div class="loadpage">
         <div class="loading">
             <div class="loader">Loading...</div>
@@ -12,11 +13,13 @@
     <label id="burger" for="menu-toggle"></label>
     <ul id="menu">
         <p id="howto">使い方</p>
-        <p>この検索エンジンはPythonで書かれています。キーワードを検索ボックスに入力しEnterまたは検索ボタンをクリックするとDBからキーワードとマッチしたURLを探して来て表示してくれます。</p>
+        <img id="robot" src="/static/img/robot2.png" alt="robot2" >
+        <p>ようこそ！隠しページに</p>
+        <p>ここではクロールしたいページのURLを入力するとクローリングしてくれるよ！googelがおすすめ他のページは重くて時間がかかる。</p>
         
     </ul>
     
-    <div class="wallpaperb">
+    
     <div class="container-wall">
         <div class="container">
             <img src="/static/img/rush.png" width="auto" height="auto" alt="rush" title="rush" >
@@ -41,7 +44,7 @@
         <div class="gif">
             <img src="/static/img/fire.gif" width="auto" height="auto" alt="fire" >
         </div>
-    </div><!-- wallpaperb -->
+    
     
     
 {% endblock %}

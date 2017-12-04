@@ -27,15 +27,24 @@ ul#menu li, a {
     display: none;
 }*/
 ul#menu p {
-    margin: 75px auto;
+    margin: 35px auto;
     width: 500px;
     display: none;
 }
 
 #howto {
+    padding-top: 85px;
     font-size: 2rem;
     color: #03A9F4;
 }
+
+#robot {
+    margin: 0 auto;
+    display: none;
+    height: 100px;
+    width: 100px;
+}    
+
 
 ul{
     z-index: 1;
@@ -105,7 +114,7 @@ ul{
 #menu-toggle:checked + #trigger + #burger + #menu {
     animation: checked-anim 1s ease both;
 }
-#menu-toggle:checked + #trigger ~ #menu > p {
+#menu-toggle:checked + #trigger ~ #menu p, #menu-toggle:checked + #trigger ~ #menu > img {
     display: block;/*ここで消した値を表示*/
 }
 [type="checkbox"]:not(:checked), [type="checkbox"]:checked {

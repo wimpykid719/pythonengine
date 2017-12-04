@@ -1,17 +1,19 @@
 {% extends "layout.html" %}
 {% block content %}
+<body id="wallpaper">
     <input type="checkbox" id="menu-toggle"/>
     <label id="trigger" for="menu-toggle"></label>
     <label id="burger" for="menu-toggle"></label>
     <ul id="menu">
         <p id="howto">使い方</p>
-        <p>この検索エンジンはPythonで書かれています。<br>キーワードを検索ボックスに入力しEnterまたは検索ボタンをクリックするとDBからキーワードとマッチしたURLを探して来て表示してくれます。</p>
+        <img id="robot" src="/static/img/robot.png" alt="robot" >
+        <p>　この検索エンジンはPythonで書かれています。<br>キーワードを検索ボックスに入力し検索ボタンをクリックするとDBからキーワードとマッチしたURLを探して来て表示してくれます。</p>
+        <p>あとは隠しページを用意したある言葉を検索ボックス入力すると行けるよ！言葉はソースコードに隠したよ</p>
         <!-- <li><a href="#">Home</a></li>
         <li><a href="#">About</a></li>
         <li><a href="#">Portfolio</a></li>
         <li><a href="#">Contact</a></li> -->
     </ul>
-    <div class="wallpaper">
     <div class="container-wall">
         <div class="container">
             <img src="/static/img/rush.png" width="auto" height="auto" alt="rush" title="rush">
@@ -29,9 +31,8 @@
             </form>
             <br>   
         </div><!-- container -->
-        </div>
-        <div class="gif">
-            <img src="/static/img/coffee.gif" width="auto" height="auto" alt="coffee" >
-        </div>
-    </div>
+    </div><!-- container-wall -->
+    <div class="gif"><img src="/static/img/coffee.gif" width="auto" height="auto" alt="coffee" ></div>
+    <!-- 言葉はwataru -->
+    
 {% endblock %}

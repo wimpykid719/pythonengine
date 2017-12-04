@@ -48,6 +48,7 @@ def _get_page(url):
     #r変数に<!DOCTYPE html>から代入する。
     r = requests.get(url)
     #レスポンスコードが200で正常だったら文字列""にして返す。
+    r.encoding = r.apparent_encoding
     if r.status_code == 200:
         return r.text
 
