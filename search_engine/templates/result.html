@@ -23,8 +23,8 @@
         <div class="result">
             <h3 class="normal">「{{keyword}}」の検索結果...</h3>
             <ul class="pickup-url">
-                {% for url in query['url'] %}
-                <li><a href="{{url}}">{{url}}</a></li>
+                {% for url in query %}
+                <li><a href="{{url[1]}}">{{url[0]}}</a></li>
                 {% else %}
                 <p>そのキーワードを持つページはありませんでした。</p>
                 {% endfor %}

@@ -11,6 +11,11 @@ MONGO_URL = app.config['MONGO_URL']
 client = MongoClient(MONGO_URL)
 db = client[urlparse(MONGO_URL).path[1:]]
 col = db["Index"]
+col2 = db["Webname"]
+
+# DB col + col2
+
+
 
 
 @app.route('/', methods=['GET', 'POST']) #postはフォームにキーワードぶち込んでDBに探させる時
@@ -22,9 +27,20 @@ def index():
         if keyword:
             if keyword == 'wataru':
                 return redirect(url_for('crawler'))
+            url_and_title = []
+            url_and_keyword_field = col.find_one({'keyword': keyword})
+            if url_and_keyword_field:
+                urls = url_and_keyword_field['url']
+                for url in urls:
+                    title_field = col2.find_one({'url':url})
+                    if title_field:
+                        title = title_field['title']
+                        url_and_title.append([title, url])
+                    else:
+                        url_and_title.append([url, url])
             return render_template(
                 'result.html',
-                query=col.find_one({'keyword': keyword}),
+                query=url_and_title,
                 keyword=keyword)
     return render_template('index.html')
 

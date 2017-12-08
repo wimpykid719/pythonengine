@@ -16,11 +16,14 @@ from config import MONGO_URL
 
 client = MongoClient(MONGO_URL)
 db = client[urlparse(MONGO_URL).path[1:]]
+# col = db["Index"]
 col = db["Index"]
+col2 =db["Webname"]
 
 def drop_collection():
 	#作成したDBのコレクションを削除する。	
     col.drop()
+    col2.drop()
 
 #if__name__ == '__main__'はこれが直接実行されたものなのか(python drop_collection.py)チェックしてもしそうなら
 #drop_collectionを実行する。

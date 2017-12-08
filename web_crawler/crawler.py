@@ -33,7 +33,14 @@ col = db["Index"]
 #ここでコレクション"Index"を作っている。
 #print(col) Collection(Database(MongoClient(host=['localhost:27017'], document_class=dict, tz_aware=False, connect=True), 'test'), 'Index')
 
+col2 = db["Webname"]
 
+def split_str_to_500(text):
+    "split string by its length janomeが一度に\
+    たくさんの英語やら日本語が入ったテキストを送るとエラーが出る\
+    のでここで区切ってる。現在はバージョンアップして治っている。"
+    length = len(text)
+    return [text[i:i+500] for i in range(0, length, 500)]
 
 def _split_to_word(text):
     """Japanese morphological analysis with janome.
@@ -52,6 +59,18 @@ def _get_page(url):
     if r.status_code == 200:
         return r.text
 
+def _get_page_tite(html):
+    print(html)
+    title = BeautifulSoup(html, "html.parser").find('title').text
+    return title
+
+def add_to_webname(url, title):
+    entry = col2.find_one({'title': title})
+    if not entry:
+        col2.insert({'url': url, 'title': title})
+        return
+    # not found, add new keyword to index
+    
 
 def _extract_url_links(html, rooturl):
     """extract url links
@@ -82,13 +101,15 @@ def _extract_url_links(html, rooturl):
 def add_to_index(keyword, url):
     #DBからキーワードが含まれたドキュメントを持ってくるentryに代入する
     entry = col.find_one({'keyword': keyword})
+
     if entry:
         #entryの中にあるurlと引数のurlが同じじゃなければurlに引数のurlを追加して
         if url not in entry['url']:
             entry['url'].append(url)
             #DBに保存する。saveは追加よりも更新って感じ
             col.save(entry)
-        return
+        return 
+        #普通リターンしないとそのまますとんと落ちるだからelseがいる。ループするときは
     # not found, add new keyword to index
     col.insert({'keyword': keyword, 'url': [url]})
 
@@ -106,8 +127,14 @@ def add_page_to_index(url, html):
         child_text = child_tag.text
         for line in child_text.split('\n'): #文字列から改行を取り除いて分ける。
             line = line.rstrip().lstrip() #上のコードだけだと両端の空白が消せないからここで削除している。実際には削除はできないので取り除いたのを返している
-            for word in _split_to_word(line): #janomaで日本語形態解析して単語をwordに代入
-                add_to_index(word, url)
+            if len(line) > 500:
+                short_line = split_str_to_500(line)
+                for line in short_line:
+                    for word in _split_to_word(line): #janomeで日本語形態解析して単語をwordに代入
+                        add_to_index(word, url)
+            else:
+                for word in _split_to_word(line): #janomeで日本語形態解析して単語をwordに代入
+                        add_to_index(word, url)
 
 
 def crawl_web(seed, max_depth):
@@ -120,6 +147,8 @@ def crawl_web(seed, max_depth):
         page_url = to_crawl.pop() #to_crawl（最初はurlが1つしか入らない）からurlを取り出して削除する
         if page_url not in crawled:
             html = _get_page(page_url) #2回目はここでエラーになると思う。
+            title = _get_page_tite(html)
+            add_to_webname(page_url, title)
             add_page_to_index(page_url, html)
             to_crawl = to_crawl.union(_extract_url_links(html, page_url)) #to_crawlに今まで入ってたurlとbf4で持ってきたurlを足してto_crawlに戻す最初0 + 5、4 + 2、5 + 0
             #ここでaタグからurlだけ取り出す。to_crawlには<a>のついたurlのリストが入ってくる
