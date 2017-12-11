@@ -36,9 +36,9 @@ col = db["Index"]
 col2 = db["Webname"]
 
 def split_str_to_500(text):
-    "split string by its length janomeが一度に\
+    """split string by its length janomeが一度に\
     たくさんの英語やら日本語が入ったテキストを送るとエラーが出る\
-    のでここで区切ってる。現在はバージョンアップして治っている。"
+    のでここで区切ってる。現在はバージョンアップして治っている。"""
     length = len(text)
     return [text[i:i+500] for i in range(0, length, 500)]
 
@@ -52,17 +52,21 @@ def _split_to_word(text):
 
 
 def _get_page(url):
+    #headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
     #r変数に<!DOCTYPE html>から代入する。
-    r = requests.get(url)
+    r = requests.get(url) #, headers=headers
     #レスポンスコードが200で正常だったら文字列""にして返す。
     r.encoding = r.apparent_encoding
     if r.status_code == 200:
         return r.text
 
 def _get_page_tite(html):
-    print(html)
-    title = BeautifulSoup(html, "html.parser").find('title').text
-    return title
+    
+    title = BeautifulSoup(html, "html.parser").find('title')
+    if title:
+        return title.text
+    else:
+        return
 
 def add_to_webname(url, title):
     entry = col2.find_one({'title': title})
@@ -80,9 +84,11 @@ def _extract_url_links(html, rooturl):
     #"html.parser"はなるべくpython標準のparserモジュールを使うように指定しているBeautifulSoup()で
     #BeautifulSoupで扱えるようにしている。
     root_url = rooturl
-    img_suffixes = (".png", ".jpg", ".gif")
+    img_suffixes = (".png", ".jpg", ".gif", "pdf")
     all_url = []
     body_soup = BeautifulSoup(html, "html.parser").find('body')
+    if body_soup is None:#bodyタグ以下を取得できなければ次のurlをたどる。
+        return []
     #aタグを全て持ってくる。
     #print(soup.find_all(href=re.compile("link")))からの[]が帰ってきた。
     #
@@ -116,6 +122,8 @@ def add_to_index(keyword, url):
 
 def add_page_to_index(url, html):
     body_soup = BeautifulSoup(html, "html.parser").find('body')
+    if body_soup is None:#bodyタグ以下を取得できなければ次のurlをたどる。
+        return 
     #htmlないの属性タグとその中身をchild_tagに入れていってる<body>以下にある全てのタグ<a>やら<th>やらを持ってくる。
     #先ずはbodyより下のhtml全部持ってきて次にその下のdivを持ってきてul持ってきてどんどん掘り下げる感じ
     #if body_soup.findChildren() is not None:
@@ -145,15 +153,17 @@ def crawl_web(seed, max_depth):
     while to_crawl and depth <= max_depth:
         #回収したurlの後ろを削除しpage_urlに入れる。
         page_url = to_crawl.pop() #to_crawl（最初はurlが1つしか入らない）からurlを取り出して削除する
+        print(page_url)
         if page_url not in crawled:
-            html = _get_page(page_url) #2回目はここでエラーになると思う。
-            title = _get_page_tite(html)
-            add_to_webname(page_url, title)
-            add_page_to_index(page_url, html)
-            to_crawl = to_crawl.union(_extract_url_links(html, page_url)) #to_crawlに今まで入ってたurlとbf4で持ってきたurlを足してto_crawlに戻す最初0 + 5、4 + 2、5 + 0
-            #ここでaタグからurlだけ取り出す。to_crawlには<a>のついたurlのリストが入ってくる
-            # print(to_crawl) #to_crawlは空だったset()
-            crawled.append(page_url)
+            html = _get_page(page_url)
+            if html:
+                title = _get_page_tite(html)
+                add_to_webname(page_url, title)
+                add_page_to_index(page_url, html)
+                to_crawl = to_crawl.union(_extract_url_links(html, page_url)) #to_crawlに今まで入ってたurlとbf4で持ってきたurlを足してto_crawlに戻す最初0 + 5、4 + 2、5 + 0
+                #ここでaタグからurlだけ取り出す。to_crawlには<a>のついたurlのリストが入ってくる
+                # print(to_crawl) #to_crawlは空だったset()
+                crawled.append(page_url)
         if not to_crawl:
             to_crawl, next_depth = next_depth, [] #next_depthいる？
         depth += 1
